@@ -2,14 +2,14 @@
 
 Sample that illustrates how to leverage Azure KeyVault for centralized Key Management to wrap / unwrap one-time symmetric keys for encrypting serialized data at rest.
 
-## Encryption via the envelope technique works in the following way:
- * Generates an AES symmetric key. This is to be a limited-use symmetric key.
+## Encryption Steps:
+ * Generates an AES symmetric key. This is to be a limited-use symmetric key. If there are changes to the underlying data just re-gen a new IV/symmetric key - the bits are free.
  * Data at rest is encrypted using this.
  * This AES Symmetric key is then wrapped (encrypted) using key encryption key stored in KeyVault. This key is identified by a Key Identifier and is an asymmetric key pair managed and stored in Azure Key Vault allowing for auditing, key versioning, etc.
  * The client systems never have access to the KeyVault key, but instead invoke the key wrapping algorithm provided by Azure Key Vault using the API.
  * The encrypted data can then be stored anywhere. The wrapped key along with some additional encryption metadata must be stored along with the encrypted data.
 
-## Decryption via the envelope technique works in the following way:
+## Decryption Steps:
  * Library assumes the key encryption key is managed in Azure Key Vaults. The user does not need to know the specific key that was used for encryption. Instead, the key resolver which resolves different key identifiers to keys can be set up and used.
  * The library downloads the encrypted data along with any encryption material that is stored in the KeyVault service.
  * The wrapped (encrypted) symmetric key is then unwrapped (decrypted) using the Azure KeyVault key. The client library does not have access to the key itself. It simply invokes the Key Vault provider's unwrapping algorithm.
@@ -56,7 +56,7 @@ UserName: bob Password: password123
  * [Securing Secrets Using Azure Key Vault and Config Encryption](https://kamranicus.com/posts/2016-02-20-azure-key-vault-config-encryption-azure)
  * [Accessing Key Vault from a native application](https://blogs.technet.microsoft.com/kv/2016/09/17/accessing-key-vault-from-a-native-application/)
  * [Use Azure Key Vault from a Web Application](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-use-from-web-application)
- * [Azure Key Vault – Step by Step](https://blogs.technet.microsoft.com/kv/2015/06/02/azure-key-vault-step-by-step/)
+ * [Azure Key Vault â€“ Step by Step](https://blogs.technet.microsoft.com/kv/2015/06/02/azure-key-vault-step-by-step/)
  * [Client-Side Encryption and Azure Key Vault for Microsoft Azure Storage](https://docs.microsoft.com/en-us/azure/storage/storage-client-side-encryption)
  * [Tutorial: Encrypt and decrypt blobs in Microsoft Azure Storage using Azure Key Vault](https://docs.microsoft.com/en-us/azure/storage/storage-encrypt-decrypt-blobs-key-vaultit)
  * [Set up Azure Key Vault with end-to-end key rotation and auditing](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-key-rotation-log-monitoring)
